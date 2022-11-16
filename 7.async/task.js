@@ -5,21 +5,27 @@ class AlarmClock {
 	}
 
 	addClock(atime, func, aid) {
-		if (aid === undefined) {
-			throw new Error("Параметр id не передан");
-		}
-		let flag = true;
-		this.alarmCollection.forEach(item => {
-			if (item.id === aid) {
-				console.error("Будильник с таким id уже задан!");
-				flag = false;
+		try {
+			if (aid === undefined) {
+				throw new Error("Параметр id не передан");
+			} else {
+				let flag = true;
+				this.alarmCollection.forEach(item => {
+					if (item.id === aid) {
+						console.error("Будильник с таким id уже задан!");
+						flag = false;
+					}
+				});
+				if (flag) {
+					const newObj = { id: aid, time: atime, callback: func };
+					this.alarmCollection.push(newObj);
+					console.log(`Будильник на ${newObj.time} задан`);
+				}
 			}
-		});
-		if (flag) {
-			const newObj = { id: aid, time: atime, callback: func };
-			this.alarmCollection.push(newObj);
-			console.log(`Будильник на ${newObj.time} задан`);
+		} catch (e) {
+			console.error(e);
 		}
+
 
 	}
 
@@ -50,7 +56,6 @@ class AlarmClock {
 			}
 		};
 
-		const rings = this.alarmCollection;
 		if (!this.timerId) {
 			this.timerId = setInterval(() => {
 				this.alarmCollection.forEach(ring => {
@@ -81,19 +86,19 @@ class AlarmClock {
 
 function testCase() {
 	let phoneAlarm = new AlarmClock();
-	phoneAlarm.addClock("05:21", () => console.log("Вставай"), 1);
-	phoneAlarm.addClock("05:22", () => {
+	phoneAlarm.addClock("05:51", () => console.log("Вставай"), 1);
+	phoneAlarm.addClock("05:52", () => {
 		console.log("Давай вставай");
 		phoneAlarm.removeClock(2);
 	}, 2);
-	phoneAlarm.addClock("05:22", () => console.log("Иди умывайся"));
-	phoneAlarm.addClock("05:23", () => {
+	phoneAlarm.addClock("05:52", () => console.log("Иди умывайся"));
+	phoneAlarm.addClock("05:53", () => {
 		console.log("Вставай а то проспишь");
 		phoneAlarm.stop();
 		phoneAlarm.clearAlarms();
 		phoneAlarm.printAlarms();
 	}, 3);
-	phoneAlarm.addClock("05:25", () => console.log("Вставай, а то проспишь"), 1);
+	phoneAlarm.addClock("05:55", () => console.log("Вставай, а то проспишь"), 1);
 	phoneAlarm.printAlarms();
 	phoneAlarm.start();
 }
